@@ -112,7 +112,7 @@ function setChannel(message) {
         var settings = JSON.parse(data);
         settings.channelToSendTo = message.channel.id;
         
-        writeFile(MENTION_LIST_FILE_PATH, JSON.stringify(settings, null, '\t'), succeeded => {
+        writeFile(SETTINGS_FILE_PATH, JSON.stringify(settings, null, '\t'), succeeded => {
             if (succeeded) {
                 message.react('✅');
             }

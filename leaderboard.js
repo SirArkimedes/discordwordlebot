@@ -12,8 +12,6 @@ function parseMessage(message) {
     const wordleMessage = message.content.match(wordleRegex);
 
     if (wordleMessage) {
-        console.log(wordleMessage);
-
         updateLeaderboard(message, wordleMessage);
     }
 }

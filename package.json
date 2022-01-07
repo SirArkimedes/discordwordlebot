@@ -1,9 +1,9 @@
 {
-  "name": "discord-roll-call-bot",
+  "name": "discord-wordle-bot",
   "version": "1.0.0",
-  "description": "Regularly scheduled DnD? Party? Figure out who is going and who isn't with this bot.",
+  "description": "",
   "main": "bot.js",
-  "author": "Andrew Robinson & Jonas Smith",
+  "author": "Andrew Robinson",
   "dependencies": {
     "discord.js": "^13.5.0"
   }

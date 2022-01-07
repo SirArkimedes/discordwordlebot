@@ -2,9 +2,9 @@
   <img src="Rounded Logo.png" alt="icon" width="300" height="300">
 </p>
 
-# 📝 Discord Roll Call Bot
-* Tired of always asking if a group of people are down to play that night? We were too.
-* Introducing Discord Roll Call Bot! 📝 A one-stop-shop for asking your friends if they're down at that same particular date and time.
+# 📝 Discord Wordle Reminder Bot
+* Tired of always trying to remember to play the new Wordle? We were too.
+* Introducing Discord Wordle Reminder Bot! 📝 A one-stop-shop for asking you and your friends to play the wordle challenge that day.
 
 # How to run
 ### Requirement
@@ -20,25 +20,23 @@
       "token": "YOUR BOT TOKEN HERE"
   } `
 6. Modify the `settings.json` `timeToSendMessage` value to be something in the future. (It uses [Unix Time](https://www.epochconverter.com/).)
-6. Run `node bot.js`.
+7. Run `node bot.js`.
+8. Add a "wordle" role to your Discord server and add those that should be ping when the reminder goes off to that role!
 
 ### Usage
 1. Once added to your server from the steps in [Setup process](https://github.com/SirArkimedes/discordrollcallbot#setup-process), run `!setChannel` to tell the bot which channel to send the scheduled message.
-2. Run `!testRollCall` to see what happens!
+2. Run `!testReminder` to see what happens!
 3. Peruse the [Commands](https://github.com/SirArkimedes/discordrollcallbot#commands) section to apply any other customizations!
 
 ### Commands
-* `!scheduledMentionAdd {username(s)}` - Adds an @'d list of users to the roll call list. (Will later mention them in the roll call message if they're in this list.)
-* `!scheduledMentionRemove {username(s)}` - Removes an @'d list of users to the roll call list.
-* `!showMentionsList` - Displays who gets mentioned on the roll call message.
 * `!setChannel` - Sets the channel at which to send the scheduled roll call to.
-* `!testRollCall` - Sends a non-scheduled roll call message.
+* `!testReminder` - Sends a non-scheduled reminder message.
 * `!ping` - Responds with a message to show that the bot is alive and well.
 
 # Thanks!
-* This project was made for those that play DnD (among other things...).
+* This project was made for those that play wordle.
 * Thanks for checking it out!
 
 <p align="center">
-  Made with ❤️ by  <a href="https://github.com/SirArkimedes">SirArkimedes</a> and <a href="https://github.com/JonasESmith">JonasESmith</a>.
+  Made with ❤️ by  <a href="https://github.com/SirArkimedes">SirArkimedes</a>.
 </p>

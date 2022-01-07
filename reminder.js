@@ -50,21 +50,7 @@ function remind(client, isFromScheduler = false) {
                 });
             }
 
-            readInFile(LEADERBOARD_FILE_PATH, data => {
-                const leaderboard = JSON.parse(data);
-                const messageToSend = new MessageEmbed()
-                    .setTitle('⬛⬜🟨🟩🟩🟨⬜⬛')
-                    .setURL('https://www.powerlanguage.co.uk/wordle/')
-                    .setColor('0x91f59e')
-                    .setDescription('Current leaderboard:')
-                    .setFields(getMessageFields(leaderboard));
-                const messageContent = `New <@&${wordleRoll}> just dropped!`;
-    
-                channel.send({ content: messageContent, embeds: [messageToSend] })
-                    .then(embededMessage => {
-                        savedMessage = embededMessage;
-                    });
-            });
+            sendLeaderboardMessage(channel, `New <@&${wordleRoll}> just dropped!`);
         }
     })
 };
@@ -79,9 +65,34 @@ function updateSavedMessageLeaderboard(leaderboard) {
     }
 }
 
+function sendLeaderboardMessage(channel, messageContent) {
+    readInFile(LEADERBOARD_FILE_PATH, data => {
+        const leaderboard = JSON.parse(data);
+        const messageToSend = new MessageEmbed()
+            .setTitle('⬛⬜🟨🟩🟩🟨⬜⬛')
+            .setURL('https://www.powerlanguage.co.uk/wordle/')
+            .setColor('0x91f59e')
+            .setDescription('Current leaderboard:')
+            .setFields(getMessageFields(leaderboard));
+
+        var message = null;
+        if (messageContent == null) {
+            message = { embeds: [messageToSend] }
+        } else {
+            message = { content: messageContent, embeds: [messageToSend] }
+        }
+
+        channel.send(message)
+            .then(embededMessage => {
+                savedMessage = embededMessage;
+            });
+    });
+}
+
 exports.scheduleReminder = scheduleReminder;
 exports.remind = remind;
 exports.updateSavedMessageLeaderboard = updateSavedMessageLeaderboard;
+exports.sendLeaderboardMessage = sendLeaderboardMessage;
 
 // Helpers
 

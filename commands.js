@@ -1,7 +1,7 @@
 const { MessageEmbed } = require('discord.js');
 
 const { readInFile, writeFile, SETTINGS_FILE_PATH } = require('./file_reader.js');
-const { getHumanReadableMentionsList, remind } = require('./reminder.js');
+const { remind, sendLeaderboardMessage } = require('./reminder.js');
 
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
@@ -13,6 +13,8 @@ function attemptCommandEvaluation(message) {
         setChannel(message);
     } else if (messageContent.startsWith('!testReminder')) {
         testReminder(message);
+    } else if (messageContent.startsWith('!leaderboard')) {
+        showLeaderboard(message);
     } else if (messageContent.startsWith('!ping')) {
         ping(message);
     }
@@ -55,6 +57,10 @@ function setChannel(message) {
 
 function testReminder(message) {
     remind(message.client);
+}
+
+function showLeaderboard(message) {
+    sendLeaderboardMessage(message.channel);
 }
 
 function ping(message) {

@@ -31,6 +31,7 @@
 ### Commands
 * `!setChannel` - Sets the channel at which to send the scheduled reminder to.
 * `!testReminder` - Sends a non-scheduled reminder message.
+* `!leaderboard` - Responds with just a message of the most recent leaderboard.
 * `!ping` - Responds with a message to show that the bot is alive and well.
 
 # Thanks!

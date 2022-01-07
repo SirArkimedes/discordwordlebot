@@ -3,10 +3,6 @@ const { MessageEmbed } = require('discord.js');
 const { SETTINGS_FILE_PATH, readInFile, writeFile } = require('./file_reader.js');
 const { LEADERBOARD_FILE_PATH } = require('./leaderboard.js');
 
-var mentionsList = [];
-var thoseThatAreIn = [];
-var thoseThatAreOut = [];
-
 var savedMessage = null;
 
 // Public
@@ -56,42 +52,36 @@ function remind(client, isFromScheduler = false) {
 
             readInFile(LEADERBOARD_FILE_PATH, data => {
                 const leaderboard = JSON.parse(data);
-
-                var nameList = '';
-                var averageList = '';
-                var totalList = '';
-                var numberOfItems = 0;
-                var sumOfAll = 0;
-                for (const entry of getSortedLeaderboard(leaderboard)) {
-                    nameList += `${entry.user}\n`;
-                    averageList += `${entry.average}\n`;
-                    totalList += `${entry.total}\n`;
-
-                    numberOfItems += entry.total / entry.average;
-                    sumOfAll += entry.total;
-                }
-
                 const messageToSend = new MessageEmbed()
                     .setTitle('⬛⬜🟨🟩🟩🟨⬜⬛')
                     .setURL('https://www.powerlanguage.co.uk/wordle/')
                     .setColor('0x91f59e')
                     .setDescription('Current leaderboard:')
-                    .setFields(
-                        { name: '🙇 Who', value: nameList, inline: true },
-                        { name: '🎆 Average', value: averageList, inline: true },
-                        { name: '💯 Total', value: totalList, inline: true },
-
-                        { name: 'Attempts', value: `${numberOfItems}`, inline: true },
-                        { name: 'Overall Average', value: `${sumOfAll / numberOfItems}`, inline: true },
-                        { name: 'Sum', value: `${sumOfAll}`, inline: true }
-                    );
+                    .setFields(getMessageFields(leaderboard));
                 const messageContent = `New <@&${wordleRoll}> just dropped!`;
     
                 channel.send({ content: messageContent, embeds: [messageToSend] })
+                    .then(embededMessage => {
+                        savedMessage = embededMessage;
+                    });
             });
         }
     })
 };
+
+function updateSavedMessageLeaderboard(leaderboard) {
+    if (savedMessage !== null) {
+        const editedEmbed = new MessageEmbed(savedMessage.embeds[0]);
+        editedEmbed.setFields(getMessageFields(leaderboard));
+        savedMessage.edit({ embeds: [editedEmbed] }).then(editedMessage => {
+            savedMessage = editedMessage;
+        });
+    }
+}
+
+exports.scheduleReminder = scheduleReminder;
+exports.remind = remind;
+exports.updateSavedMessageLeaderboard = updateSavedMessageLeaderboard;
 
 // Helpers
 
@@ -111,5 +101,28 @@ function getSortedLeaderboard(leaderboard_json) {
     return values;
 }
 
-exports.scheduleReminder = scheduleReminder;
-exports.remind = remind;
+function getMessageFields(leaderboard) {
+    var nameList = '';
+    var averageList = '';
+    var totalList = '';
+    var numberOfItems = 0;
+    var sumOfAll = 0;
+    for (const entry of getSortedLeaderboard(leaderboard)) {
+        nameList += `${entry.user}\n`;
+        averageList += `${entry.average}\n`;
+        totalList += `${entry.total}\n`;
+
+        numberOfItems += entry.total / entry.average;
+        sumOfAll += entry.total;
+    }
+
+    return [
+        { name: '🙇 Who', value: nameList, inline: true },
+        { name: '🎆 Average', value: averageList, inline: true },
+        { name: '💯 Total', value: totalList, inline: true },
+
+        { name: 'Attempts', value: `${numberOfItems}`, inline: true },
+        { name: 'Overall Average', value: `${sumOfAll / numberOfItems}`, inline: true },
+        { name: 'Sum', value: `${sumOfAll}`, inline: true },
+    ];
+}

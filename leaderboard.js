@@ -1,6 +1,7 @@
 const { MessageEmbed } = require('discord.js');
 
 const { readInFile, writeFile } = require('./file_reader.js');
+const reminder = require('./reminder.js');
 
 const LEADERBOARD_FILE_PATH = './leaderboard_stats.json'
 
@@ -43,6 +44,8 @@ function updateLeaderboard(message, wordleMessage) {
             if (succeeded) {
                 console.log("Leaderboard updated!");
                 message.react('✅');
+
+                reminder.updateSavedMessageLeaderboard(leaderboard);
             }
         });
     });

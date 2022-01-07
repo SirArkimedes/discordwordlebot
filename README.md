@@ -24,12 +24,12 @@
 8. Add a `wordle` role to your Discord server and add those that should be pinged when the reminder goes off to that role!
 
 ### Usage
-1. Once added to your server from the steps in [Setup process](https://github.com/SirArkimedes/discordrollcallbot#setup-process), run `!setChannel` to tell the bot which channel to send the scheduled message.
+1. Once added to your server from the steps in [Setup process](https://github.com/SirArkimedes/discordwordlebot#setup-process), run `!setChannel` to tell the bot which channel to send the scheduled message.
 2. Run `!testReminder` to see what happens!
 3. Peruse the [Commands](https://github.com/SirArkimedes/discordwordlebot#commands) section to apply any other customizations!
 
 ### Commands
-* `!setChannel` - Sets the channel at which to send the scheduled roll call to.
+* `!setChannel` - Sets the channel at which to send the scheduled reminder to.
 * `!testReminder` - Sends a non-scheduled reminder message.
 * `!ping` - Responds with a message to show that the bot is alive and well.
 

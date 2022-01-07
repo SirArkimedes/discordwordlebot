@@ -1,7 +1,7 @@
 const { MessageEmbed } = require('discord.js');
 
-const { readInFile, writeFile, MENTION_LIST_FILE_PATH } = require('./file_reader.js');
-const { getHumanReadableMentionsList, rollCall } = require('./rollcall.js');
+const { readInFile, writeFile, SETTINGS_FILE_PATH } = require('./file_reader.js');
+const { getHumanReadableMentionsList, remind } = require('./reminder.js');
 
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
@@ -17,8 +17,8 @@ function attemptCommandEvaluation(message) {
         showMentionsList(message);
     } else if (messageContent.startsWith('!setChannel')) {
         setChannel(message);
-    } else if (messageContent.startsWith('!testRollCall')) {
-        testRollCall(message);
+    } else if (messageContent.startsWith('!testReminder')) {
+        testReminder(message);
     } else if (messageContent.startsWith('!ping')) {
         ping(message);
     }
@@ -47,7 +47,7 @@ function registerCommands() {
 }
 
 function addMemberToMentionList(message) {
-    readInFile(MENTION_LIST_FILE_PATH, (data) => {
+    readInFile(SETTINGS_FILE_PATH, (data) => {
         const userIds = message.mentions.users.map(user => {
             return user.id
         });
@@ -61,7 +61,7 @@ function addMemberToMentionList(message) {
         }
 
         json.thoseToMention = mentionsList;
-        writeFile(MENTION_LIST_FILE_PATH, JSON.stringify(json, null, '\t'), (succeeded) => {
+        writeFile(SETTINGS_FILE_PATH, JSON.stringify(json, null, '\t'), (succeeded) => {
             if (succeeded) {
                 message.react('✅');
                 showMentionsList(message);
@@ -71,7 +71,7 @@ function addMemberToMentionList(message) {
 };
 
 function removeMemberFromMentionList(message) {
-    readInFile(MENTION_LIST_FILE_PATH, (data) => {
+    readInFile(SETTINGS_FILE_PATH, (data) => {
         const userIds = message.mentions.users.map(user => {
             return user.id
         });
@@ -87,7 +87,7 @@ function removeMemberFromMentionList(message) {
         }
 
         json.thoseToMention = mentionsList;
-        writeFile(MENTION_LIST_FILE_PATH, JSON.stringify(json, null, '\t'), (succeeded) => {
+        writeFile(SETTINGS_FILE_PATH, JSON.stringify(json, null, '\t'), (succeeded) => {
             if (succeeded) {
                 message.react('✅');
                 showMentionsList(message);
@@ -97,7 +97,7 @@ function removeMemberFromMentionList(message) {
 };
 
 function showMentionsList(message) {
-    readInFile(MENTION_LIST_FILE_PATH, (data) => {
+    readInFile(SETTINGS_FILE_PATH, (data) => {
         var mentionsList = JSON.parse(data).thoseToMention;
         const embedMessage = new MessageEmbed()
             .setTitle('These suckers are in the list:')
@@ -108,7 +108,7 @@ function showMentionsList(message) {
 }
 
 function setChannel(message) {
-    readInFile(MENTION_LIST_FILE_PATH, data => {
+    readInFile(SETTINGS_FILE_PATH, data => {
         var settings = JSON.parse(data);
         settings.channelToSendTo = message.channel.id;
         
@@ -120,8 +120,8 @@ function setChannel(message) {
     });
 }
 
-function testRollCall(message) {
-    rollCall(message.client);
+function testReminder(message) {
+    remind(message.client);
 }
 
 function ping(message) {

@@ -3,7 +3,7 @@ const { Client, Intents } = require('discord.js');
 const auth = require('./auth.json');
 const commands = require('./commands.js');
 const leaderboard = require('./leaderboard.js');
-const { scheduleRollCall } = require('./rollcall.js');
+const { scheduleReminder } = require('./reminder.js');
 
 const client = new Client({
   intents: [
@@ -15,7 +15,7 @@ const client = new Client({
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
   commands.registerCommands();
-  scheduleRollCall(client);
+  scheduleReminder(client);
 });
 
 client.on('messageCreate', message => {

@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const MENTION_LIST_FILE_PATH = './settings.json'
+const SETTINGS_FILE_PATH = './settings.json'
 
 function readInFile(filePath, callback) {
     fs.readFile(filePath, 'utf8', (error, data) => {
@@ -24,6 +24,6 @@ function writeFile(filePath, data, callback = null) {
     });
 };
 
-exports.MENTION_LIST_FILE_PATH = MENTION_LIST_FILE_PATH;
+exports.SETTINGS_FILE_PATH = SETTINGS_FILE_PATH;
 exports.readInFile = readInFile;
 exports.writeFile = writeFile;

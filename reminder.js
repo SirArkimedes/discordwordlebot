@@ -60,22 +60,30 @@ function remind(client, isFromScheduler = false) {
                 var nameList = '';
                 var averageList = '';
                 var totalList = '';
+                var numberOfItems = 0;
+                var sumOfAll = 0;
                 for (const entry of getSortedLeaderboard(leaderboard)) {
-                    console.log(entry);
                     nameList += `${entry.user}\n`;
                     averageList += `${entry.average}\n`;
                     totalList += `${entry.total}\n`;
+
+                    numberOfItems += entry.total / entry.average;
+                    sumOfAll += entry.total;
                 }
 
                 const messageToSend = new MessageEmbed()
-                    .setTitle('⬛🟩🟨⬜   Come one come all, a new wordle is out!   ⬛🟩🟨⬜')
+                    .setTitle('⬛⬜🟨🟩🟩🟨⬜⬛')
                     .setURL('https://www.powerlanguage.co.uk/wordle/')
                     .setColor('0x91f59e')
                     .setDescription('Current leaderboard:')
                     .setFields(
-                        { name: 'Who', value: nameList, inline: true },
-                        { name: 'Average', value: averageList, inline: true },
-                        { name: 'Total', value: totalList, inline: true }
+                        { name: '🙇 Who', value: nameList, inline: true },
+                        { name: '🎆 Average', value: averageList, inline: true },
+                        { name: '💯 Total', value: totalList, inline: true },
+
+                        { name: 'Attempts', value: `${numberOfItems}`, inline: true },
+                        { name: 'Overall Average', value: `${sumOfAll / numberOfItems}`, inline: true },
+                        { name: 'Sum', value: `${sumOfAll}`, inline: true }
                     );
                 const messageContent = `New <@&${wordleRoll}> just dropped!`;
     
@@ -91,11 +99,11 @@ function getSortedLeaderboard(leaderboard_json) {
     var values = [];
     Object.entries(leaderboard_json).forEach(function([key, scores]) {
         total = 0;
-        for (value in scores) {
+        for (const value of scores) {
             total += value;
         }
 
-        values.push({ "user": `<@${key}>`, "total": parseInt(total), "average": total / scores.length })
+        values.push({ "user": `<@${key}>`, "total": total, "average": total / scores.length })
     });
     values.sort(function(left, right) {
         return right.total - left.total

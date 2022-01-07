@@ -21,12 +21,12 @@
   } `
 6. Modify the `settings.json` `timeToSendMessage` value to be something in the future. (It uses [Unix Time](https://www.epochconverter.com/).)
 7. Run `node bot.js`.
-8. Add a "wordle" role to your Discord server and add those that should be ping when the reminder goes off to that role!
+8. Add a `wordle` role to your Discord server and add those that should be pinged when the reminder goes off to that role!
 
 ### Usage
 1. Once added to your server from the steps in [Setup process](https://github.com/SirArkimedes/discordrollcallbot#setup-process), run `!setChannel` to tell the bot which channel to send the scheduled message.
 2. Run `!testReminder` to see what happens!
-3. Peruse the [Commands](https://github.com/SirArkimedes/discordrollcallbot#commands) section to apply any other customizations!
+3. Peruse the [Commands](https://github.com/SirArkimedes/discordwordlebot#commands) section to apply any other customizations!
 
 ### Commands
 * `!setChannel` - Sets the channel at which to send the scheduled roll call to.

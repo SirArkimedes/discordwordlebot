@@ -17,7 +17,7 @@
 4. Copy the bot's OAuth token from the Discord dashboard at the link in step 2.
 5. Create an `auth.json` file in the root folder with the following format and where the bot token can be found in the Discord dashboard:
   ` {
-      token: "YOUR BOT TOKEN HERE"
+      "token": "YOUR BOT TOKEN HERE"
   } `
 6. Modify the `settings.json` `timeToSendMessage` value to be something in the future. (It uses [Unix Time](https://www.epochconverter.com/).)
 6. Run `node bot.js`.

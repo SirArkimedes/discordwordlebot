@@ -16,7 +16,7 @@ function scheduleReminder(client) {
         const settings = JSON.parse(data);
         const differenceNowToScheduledTime = settings.timeToSendMessage - Date.now();
         setTimeout(() => {
-            reminder(client, true);
+            remind(client, true);
         }, differenceNowToScheduledTime);
     });
 }
@@ -45,7 +45,7 @@ function remind(client, isFromScheduler = false) {
             console.log('Cannot find channel described in settings!');
         } else {
             if (isFromScheduler) {
-                const offsetTime = 5; // One day
+                const offsetTime = 86400000; // One day in milliseconds
                 settings.timeToSendMessage += offsetTime;
                 writeFile(SETTINGS_FILE_PATH, JSON.stringify(settings, null, '\t'), succeeded => {
                     if (succeeded) {

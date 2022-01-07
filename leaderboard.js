@@ -43,6 +43,7 @@ function updateLeaderboard(message, wordleMessage) {
         writeFile(LEADERBOARD_FILE_PATH, JSON.stringify(leaderboard, null, '\t'), succeeded => {
             if (succeeded) {
                 console.log("Leaderboard updated!");
+                message.react('✅');
             }
         });
     });

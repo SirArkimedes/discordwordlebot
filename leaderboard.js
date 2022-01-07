@@ -33,12 +33,12 @@ function updateLeaderboard(message, wordleMessage) {
             score = 7 - parseInt(wordleMessage[1]);
         }
         
-        var currentScore = leaderboard[message.author.id];
-        if (currentScore == undefined) {
-            currentScore = 0;
+        var pastScores = leaderboard[message.author.id];
+        if (pastScores == undefined) {
+            pastScores = [];
         }
-        currentScore += score;
-        leaderboard[message.author.id] = currentScore;
+        pastScores.push(score);
+        leaderboard[message.author.id] = pastScores;
 
         writeFile(LEADERBOARD_FILE_PATH, JSON.stringify(leaderboard, null, '\t'), succeeded => {
             if (succeeded) {

@@ -3,6 +3,10 @@ const { MessageEmbed } = require('discord.js');
 const { readInFile, writeFile, MENTION_LIST_FILE_PATH } = require('./file_reader.js');
 const { getHumanReadableMentionsList, rollCall } = require('./rollcall.js');
 
+const { REST } = require('@discordjs/rest');
+const { Routes } = require('discord-api-types/v9');
+const rest = new REST({ version: '9' }).setToken('token');
+
 function attemptCommandEvaluation(message) {
     var messageContent = message.content;
     if (messageContent.startsWith('!scheduledMentionAdd')) {
@@ -19,6 +23,28 @@ function attemptCommandEvaluation(message) {
         ping(message);
     }
 };
+
+function registerCommands() {
+    // const commands = [{
+    //     name: 'ping',
+    //     description: 'Replies with Pong!'
+    // }];
+
+    // (async () => {
+    //     try {
+    //         console.log('Started refreshing application (/) commands.');
+            
+    //         await rest.put(
+    //             Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID),
+    //             { body: commands },
+    //         );
+
+    //         console.log('Successfully reloaded application (/) commands.');
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // })();
+}
 
 function addMemberToMentionList(message) {
     readInFile(MENTION_LIST_FILE_PATH, (data) => {
@@ -103,3 +129,4 @@ function ping(message) {
 }
 
 exports.attemptCommandEvaluation = attemptCommandEvaluation;
+exports.registerCommands = registerCommands;

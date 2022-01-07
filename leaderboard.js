@@ -18,6 +18,7 @@ function parseMessage(message) {
     }
 }
 
+exports.LEADERBOARD_FILE_PATH = LEADERBOARD_FILE_PATH;
 exports.parseMessage = parseMessage;
 
 // Helpers

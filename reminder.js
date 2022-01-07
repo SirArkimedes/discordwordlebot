@@ -1,6 +1,7 @@
 const { MessageEmbed } = require('discord.js');
 
 const { SETTINGS_FILE_PATH, readInFile, writeFile } = require('./file_reader.js');
+const { LEADERBOARD_FILE_PATH } = require('./leaderboard.js');
 
 var mentionsList = [];
 var thoseThatAreIn = [];
@@ -24,11 +25,18 @@ function remind(client, isFromScheduler = false) {
     readInFile(SETTINGS_FILE_PATH, data => {
         const settings = JSON.parse(data);
         var channel = null;
+        var wordleRoll = null;
 
         for (const [guildKey, guild] of client.guilds.cache) {
             for (const [channelKey, cachedChannel] of guild.channels.cache) {
                 if (channelKey == settings.channelToSendTo) {
                     channel = cachedChannel;
+                }
+            }
+
+            for (const [roleKey, role] of guild.roles.cache) {
+                if (role.name == 'wordle') {
+                    wordleRoll = role.id;
                 }
             }
         }
@@ -46,60 +54,54 @@ function remind(client, isFromScheduler = false) {
                 });
             }
 
-            thoseThatAreIn = [];
-            thoseThatAreOut = [];
-            mentionsList = settings.thoseToMention;
-            const messageToSend = new MessageEmbed()
-                .setTitle('📝 Who\'s going to be joining us tonight?')
-                .setColor('0xccff33')
-                .setDescription(getDescription());
-            const messageContent = `${getHumanReadableMentionsList(mentionsList)} are you in?`;
+            readInFile(LEADERBOARD_FILE_PATH, data => {
+                const leaderboard = JSON.parse(data);
 
-            channel.send({ content: messageContent, embed: messageToSend })
+                var nameList = '';
+                var averageList = '';
+                var totalList = '';
+                for (const entry of getSortedLeaderboard(leaderboard)) {
+                    console.log(entry);
+                    nameList += `${entry.user}\n`;
+                    averageList += `${entry.average}\n`;
+                    totalList += `${entry.total}\n`;
+                }
+
+                const messageToSend = new MessageEmbed()
+                    .setTitle('⬛🟩🟨⬜   Come one come all, a new wordle is out!   ⬛🟩🟨⬜')
+                    .setURL('https://www.powerlanguage.co.uk/wordle/')
+                    .setColor('0x91f59e')
+                    .setDescription('Current leaderboard:')
+                    .setFields(
+                        { name: 'Who', value: nameList, inline: true },
+                        { name: 'Average', value: averageList, inline: true },
+                        { name: 'Total', value: totalList, inline: true }
+                    );
+                const messageContent = `New <@&${wordleRoll}> just dropped!`;
+    
+                channel.send({ content: messageContent, embeds: [messageToSend] })
+            });
         }
     })
 };
 
-function getHumanReadableMentionsList(mentionsList) {
-    var thoseToMention = '';
-    for (i = 0; i < mentionsList.length; i++) {
-        if (mentionsList.length != 1 && i == mentionsList.length - 1) {
-            thoseToMention += ' and '
-        }
-
-        thoseToMention += `<@${mentionsList[i]}>`
-
-        if (mentionsList.length != 1 && i != mentionsList.length - 1 && mentionsList.length != 2) {
-            thoseToMention += ', '
-        }
-    }
-    return thoseToMention;
-}
-
 // Helpers
 
-function getDescription() {
-    var description = 'React to this message to mark that you\'re in or out for tonight!';
-
-    var thoseThatHaveNotResponded = [];
-    for (id of mentionsList) {
-        if (!thoseThatAreIn.includes(id) && !thoseThatAreOut.includes(id)) {
-            thoseThatHaveNotResponded.push(id);
+function getSortedLeaderboard(leaderboard_json) {
+    var values = [];
+    Object.entries(leaderboard_json).forEach(function([key, scores]) {
+        total = 0;
+        for (value in scores) {
+            total += value;
         }
-    }
-    if (thoseThatHaveNotResponded.length > 0) {
-        description += `\n\nThose that have not responded: \n${getHumanReadableMentionsList(thoseThatHaveNotResponded)}`
-    }
 
-    if (thoseThatAreIn.length > 0) {
-        description += `\n\nThose in: 🙋\n${getHumanReadableMentionsList(thoseThatAreIn)}`
-    }
-    if (thoseThatAreOut.length > 0) {
-        description += `\n\nThose out: 😢\n${getHumanReadableMentionsList(thoseThatAreOut)}`
-    }
-    return description;
+        values.push({ "user": `<@${key}>`, "total": parseInt(total), "average": total / scores.length })
+    });
+    values.sort(function(left, right) {
+        return right.total - left.total
+    })
+    return values;
 }
 
 exports.scheduleReminder = scheduleReminder;
 exports.remind = remind;
-exports.getHumanReadableMentionsList = getHumanReadableMentionsList;

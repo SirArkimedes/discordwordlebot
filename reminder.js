@@ -45,7 +45,7 @@ function remind(client, isFromScheduler = false) {
             console.log('Cannot find channel described in settings!');
         } else {
             if (isFromScheduler) {
-                const offsetTime = 86400; // One day
+                const offsetTime = 5; // One day
                 settings.timeToSendMessage += offsetTime;
                 writeFile(SETTINGS_FILE_PATH, JSON.stringify(settings, null, '\t'), succeeded => {
                     if (succeeded) {

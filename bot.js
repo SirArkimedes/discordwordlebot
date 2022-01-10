@@ -14,13 +14,16 @@ const client = new Client({
 
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
-  commands.registerCommands();
+  commands.registerCommands(client);
   scheduleReminder(client);
 });
 
 client.on('messageCreate', message => {
-  commands.attemptCommandEvaluation(message);
   leaderboard.parseMessage(message);
+});
+
+client.on('interactionCreate', async interaction => {
+  await commands.attemptInteractionEvaluation(interaction);
 });
 
 client.login(auth.token);

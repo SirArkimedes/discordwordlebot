@@ -1,7 +1,8 @@
 const { Client, Intents } = require('discord.js');
 
-if (require('./auth.json') != null) {
-  const auth = require('./auth.json');
+var auth = null;
+if (process.env.WORDLE_BOT_AUTH_TOKEN == null && process.env.WORDLE_BOT_CLIENT_ID == null) {
+  auth = require('./auth.json');
 }
 const commands = require('./commands.js');
 const leaderboard = require('./leaderboard.js');

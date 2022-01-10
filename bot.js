@@ -1,6 +1,8 @@
 const { Client, Intents } = require('discord.js');
 
-const auth = require('./auth.json');
+if (require('./auth.json') != null) {
+  const auth = require('./auth.json');
+}
 const commands = require('./commands.js');
 const leaderboard = require('./leaderboard.js');
 const { scheduleReminder } = require('./reminder.js');

@@ -6,8 +6,6 @@ const { remind, sendLeaderboardMessage } = require('./reminder.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
-const auth = require('./auth.json');
-const rest = new REST({ version: '9' }).setToken(auth.token);
 
 // Public 
 
@@ -34,7 +32,7 @@ async function attemptInteractionEvaluation(interaction) {
     }
 };
 
-function registerCommands(client) {
+function registerCommands(client, authToken, clientId) {
     for (const [guildKey, guild] of client.guilds.cache) {
         const commands = [
             new SlashCommandBuilder().setName('setchannel').setDescription('Set the current channel for the reminder to send a message in.'),
@@ -44,7 +42,9 @@ function registerCommands(client) {
         ]
             .map(command => command.toJSON());
 
-        rest.put(Routes.applicationGuildCommands(auth.clientId, guildKey), { body: commands })
+        const rest = new REST({ version: '9' }).setToken(authToken);
+
+        rest.put(Routes.applicationGuildCommands(clientId, guildKey), { body: commands })
             .then(() => console.log('Successfully registered application commands.'))
             .catch(console.error);
     }

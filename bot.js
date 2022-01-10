@@ -14,7 +14,16 @@ const client = new Client({
 
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
-  commands.registerCommands(client);
+
+  if (process.env.WORDLE_BOT_AUTH_TOKEN != null) {
+    auth.token = process.env.WORDLE_BOT_AUTH_TOKEN
+  }
+
+  if (process.env.WORDLE_BOT_CLIENT_ID != null) {
+    auth.clientId = process.env.WORDLE_BOT_CLIENT_ID
+  }
+
+  commands.registerCommands(client, auth.token, auth.clientId);
   scheduleReminder(client);
 });
 

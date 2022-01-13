@@ -69,7 +69,7 @@ function sendLeaderboardMessage(channel, messageContent) {
     readInFile(LEADERBOARD_FILE_PATH, data => {
         const leaderboard = JSON.parse(data);
         const messageToSend = new MessageEmbed()
-            .setTitle('⬛⬜🟨🟩🟩🟨⬜⬛')
+            .setTitle('⬛⬜🟨🟩 Click me to log your result! 🟩🟨⬜⬛')
             .setURL('https://www.powerlanguage.co.uk/wordle/')
             .setColor('0x91f59e')
             .setDescription('Current leaderboard:')

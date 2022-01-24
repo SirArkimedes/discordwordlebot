@@ -10,10 +10,15 @@ const LEADERBOARD_FILE_PATH = './leaderboard_stats.json'
 function parseMessage(message) {
     // https://github.com/kevintrankt/discord-wordle-bot/blob/main/index.ts#L258
     const wordleRegex = /Wordle \d{3} ([\dX])\/6\n{0,2}[⬛🟩🟨⬜]{5}/;
+    const hardWordleRegex = /Wordle \d{3} ([\dX])\/6\*\n{0,2}[⬛🟩🟨⬜]{5}/;
     const wordleMessage = message.content.match(wordleRegex);
+    const hardWordleMessage = message.content.match(hardWordleRegex);
 
     if (wordleMessage) {
-        updateLeaderboard(message, wordleMessage);
+        updateLeaderboard(message, wordleMessage, false);
+    }
+    if (hardWordleMessage) {
+        updateLeaderboard(message, hardWordleMessage, true);
     }
 }
 
@@ -22,7 +27,7 @@ exports.parseMessage = parseMessage;
 
 // Helpers
 
-function updateLeaderboard(message, wordleMessage) {
+function updateLeaderboard(message, wordleMessage, hardMode=false) {
     readInFile(LEADERBOARD_FILE_PATH, data => {
         const leaderboard = JSON.parse(data);
 
@@ -31,7 +36,12 @@ function updateLeaderboard(message, wordleMessage) {
             score = 0;
         } else {
             score = 7 - parseInt(wordleMessage[1]);
+
+            if (hardMode) {
+                score += 1;
+            }
         }
+        console.log(score);
         
         var pastScores = leaderboard[message.author.id];
         if (pastScores == undefined) {
